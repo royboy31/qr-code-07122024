@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model QRCode {
+  id        String   @id @default(cuid())
+  type      String
+  content   String
+  shortUrl  String   @unique
+  createdAt DateTime @default(now())
+  scans     Scan[]
+}
+
+model Scan {
+  id        String   @id @default(cuid())
+  qrCode    QRCode   @relation(fields: [qrCodeId], references: [id])
+  qrCodeId  String
+  timestamp DateTime @default(now())
+  userAgent String?
+  ipAddress String?
+  referer   String?
+}
